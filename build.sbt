@@ -28,6 +28,7 @@ lazy val root = (project in file("."))
   )
 
 lazy val common = (project in file("common"))
+  .dependsOn(`infra-scalikejdbc`)
   .settings(
     name          := "common",
     scalacOptions := ScalacOptions,
@@ -64,4 +65,20 @@ lazy val identityaccess = (project in file("identityaccess"))
     name          := "identityaccess",
     scalacOptions := ScalacOptions,
     libraryDependencies ++= Seq()
+  )
+
+lazy val `infra-scalikejdbc` = (project in file("infra-scalikejdbc"))
+  .enablePlugins(ScalikejdbcPlugin)
+  .settings(
+    name := "infra-scalikejdbc",
+    scalacOptions := Seq(
+      "-deprecation",
+      "-feature",
+      "-Ywarn-dead-code"
+    ),
+    libraryDependencies ++= Seq(
+      ScalaTest.`scalatest` % Test,
+      ScalikeJDBC.`scalikejdbc`,
+      ScalikeJDBC.`scalikejdbc-test` % Test
+    )
   )
