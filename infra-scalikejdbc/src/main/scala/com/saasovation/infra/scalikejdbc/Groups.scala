@@ -3,7 +3,7 @@ package com.saasovation.infra.scalikejdbc
 import scalikejdbc._
 
 case class Groups(
-  id: String,
+  groupId: String,
   description: String,
   name: String,
   tenantId: String,
@@ -22,11 +22,11 @@ object Groups extends SQLSyntaxSupport[Groups] {
 
   override val tableName = "groups"
 
-  override val columns = Seq("id", "description", "name", "tenant_id", "concurrency_version")
+  override val columns = Seq("group_id", "description", "name", "tenant_id", "concurrency_version")
 
   def apply(g: SyntaxProvider[Groups])(rs: WrappedResultSet): Groups = apply(g.resultName)(rs)
   def apply(g: ResultName[Groups])(rs: WrappedResultSet): Groups = new Groups(
-    id = rs.get(g.id),
+    groupId = rs.get(g.groupId),
     description = rs.get(g.description),
     name = rs.get(g.name),
     tenantId = rs.get(g.tenantId),
@@ -37,9 +37,9 @@ object Groups extends SQLSyntaxSupport[Groups] {
 
   override val autoSession = AutoSession
 
-  def find(id: String)(implicit session: DBSession = autoSession): Option[Groups] = {
+  def find(groupId: String)(implicit session: DBSession = autoSession): Option[Groups] = {
     withSQL {
-      select.from(Groups as g).where.eq(g.id, id)
+      select.from(Groups as g).where.eq(g.groupId, groupId)
     }.map(Groups(g.resultName)).single.apply()
   }
 
@@ -70,14 +70,14 @@ object Groups extends SQLSyntaxSupport[Groups] {
   }
 
   def create(
-    id: String,
+    groupId: String,
     description: String,
     name: String,
     tenantId: String,
     concurrencyVersion: Int)(implicit session: DBSession = autoSession): Groups = {
     withSQL {
       insert.into(Groups).namedValues(
-        column.id -> id,
+        column.groupId -> groupId,
         column.description -> description,
         column.name -> name,
         column.tenantId -> tenantId,
@@ -86,7 +86,7 @@ object Groups extends SQLSyntaxSupport[Groups] {
     }.update.apply()
 
     Groups(
-      id = id,
+      groupId = groupId,
       description = description,
       name = name,
       tenantId = tenantId,
@@ -96,19 +96,19 @@ object Groups extends SQLSyntaxSupport[Groups] {
   def batchInsert(entities: collection.Seq[Groups])(implicit session: DBSession = autoSession): List[Int] = {
     val params: collection.Seq[Seq[(Symbol, Any)]] = entities.map(entity =>
       Seq(
-        Symbol("id") -> entity.id,
+        Symbol("groupId") -> entity.groupId,
         Symbol("description") -> entity.description,
         Symbol("name") -> entity.name,
         Symbol("tenantId") -> entity.tenantId,
         Symbol("concurrencyVersion") -> entity.concurrencyVersion))
     SQL("""insert into groups(
-      id,
+      group_id,
       description,
       name,
       tenant_id,
       concurrency_version
     ) values (
-      {id},
+      {groupId},
       {description},
       {name},
       {tenantId},
@@ -119,18 +119,18 @@ object Groups extends SQLSyntaxSupport[Groups] {
   def save(entity: Groups)(implicit session: DBSession = autoSession): Groups = {
     withSQL {
       update(Groups).set(
-        column.id -> entity.id,
+        column.groupId -> entity.groupId,
         column.description -> entity.description,
         column.name -> entity.name,
         column.tenantId -> entity.tenantId,
         column.concurrencyVersion -> entity.concurrencyVersion
-      ).where.eq(column.id, entity.id)
+      ).where.eq(column.groupId, entity.groupId)
     }.update.apply()
     entity
   }
 
   def destroy(entity: Groups)(implicit session: DBSession = autoSession): Int = {
-    withSQL { delete.from(Groups).where.eq(column.id, entity.id) }.update.apply()
+    withSQL { delete.from(Groups).where.eq(column.groupId, entity.groupId) }.update.apply()
   }
 
 }

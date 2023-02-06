@@ -62,16 +62,16 @@ create index idx_calendar_entries_time_span_ends on calendar_entries (time_span_
 
 create table calendar_entry_invitees
 (
-    id                        serial
+    calendar_entry_invitees_id serial
         constraint calendar_entry_invitees_pk
             primary key,
-    calendar_entry_id         char(36)     not null
+    calendar_entry_id          char(36)     not null
         constraint fk_calendar_entry_invitees_calendar_entries_calendar_entry_id
             references calendar_entries,
-    participant_email_address varchar(100) not null,
-    participant_identity      varchar(50)  not null,
-    participant_name          varchar(200) not null,
-    tenant_id                 char(36)     not null
+    participant_email_address  varchar(100) not null,
+    participant_identity       varchar(50)  not null,
+    participant_name           varchar(200) not null,
+    tenant_id                  char(36)     not null
         constraint fk_calendar_entry_invitees_tenants_tenant_id_id
             references tenants
 );
@@ -85,7 +85,7 @@ create index idx_calendar_entry_invitees_tenant_id on calendar_entry_invitees (t
 
 create table calendar_entry_sharers
 (
-    id                        serial
+    calendar_entry_sharers_id serial
         constraint calendar_entry_sharers_pk
             primary key,
     calendar_id               char(36)     not null

@@ -16,7 +16,7 @@ class CalendarEntrySharersSpec extends FixtureAnyFlatSpec with Matchers with Aut
     maybeFound.isDefined should be(true)
   }
   it should "find by where clauses" in { implicit session =>
-    val maybeFound = CalendarEntrySharers.findBy(sqls.eq(ces.id, 123))
+    val maybeFound = CalendarEntrySharers.findBy(sqls.eq(ces.calendarEntrySharersId, 123))
     maybeFound.isDefined should be(true)
   }
   it should "find all records" in { implicit session =>
@@ -28,11 +28,11 @@ class CalendarEntrySharersSpec extends FixtureAnyFlatSpec with Matchers with Aut
     count should be >(0L)
   }
   it should "find all by where clauses" in { implicit session =>
-    val results = CalendarEntrySharers.findAllBy(sqls.eq(ces.id, 123))
+    val results = CalendarEntrySharers.findAllBy(sqls.eq(ces.calendarEntrySharersId, 123))
     results.size should be >(0)
   }
   it should "count by where clauses" in { implicit session =>
-    val count = CalendarEntrySharers.countBy(sqls.eq(ces.id, 123))
+    val count = CalendarEntrySharers.countBy(sqls.eq(ces.calendarEntrySharersId, 123))
     count should be >(0L)
   }
   it should "create new record" in { implicit session =>

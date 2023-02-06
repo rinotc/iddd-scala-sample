@@ -16,7 +16,7 @@ class RolesSpec extends FixtureAnyFlatSpec with Matchers with AutoRollback {
     maybeFound.isDefined should be(true)
   }
   it should "find by where clauses" in { implicit session =>
-    val maybeFound = Roles.findBy(sqls.eq(r.id, "MyString"))
+    val maybeFound = Roles.findBy(sqls.eq(r.roleId, "MyString"))
     maybeFound.isDefined should be(true)
   }
   it should "find all records" in { implicit session =>
@@ -28,15 +28,15 @@ class RolesSpec extends FixtureAnyFlatSpec with Matchers with AutoRollback {
     count should be >(0L)
   }
   it should "find all by where clauses" in { implicit session =>
-    val results = Roles.findAllBy(sqls.eq(r.id, "MyString"))
+    val results = Roles.findAllBy(sqls.eq(r.roleId, "MyString"))
     results.size should be >(0)
   }
   it should "count by where clauses" in { implicit session =>
-    val count = Roles.countBy(sqls.eq(r.id, "MyString"))
+    val count = Roles.countBy(sqls.eq(r.roleId, "MyString"))
     count should be >(0L)
   }
   it should "create new record" in { implicit session =>
-    val created = Roles.create(id = "MyString", description = "MyString", groupId = "MyString", name = "MyString", supportsNesting = false, tenantId = "MyString", concurrencyVersion = 123)
+    val created = Roles.create(roleId = "MyString", description = "MyString", groupId = "MyString", name = "MyString", supportsNesting = false, tenantId = "MyString", concurrencyVersion = 123)
     created should not be(null)
   }
   it should "save a record" in { implicit session =>

@@ -17,7 +17,7 @@ class RegistrationInvitationsSpec extends FixtureAnyFlatSpec with Matchers with 
     maybeFound.isDefined should be(true)
   }
   it should "find by where clauses" in { implicit session =>
-    val maybeFound = RegistrationInvitations.findBy(sqls.eq(ri.id, "MyString"))
+    val maybeFound = RegistrationInvitations.findBy(sqls.eq(ri.registrationInvitationId, "MyString"))
     maybeFound.isDefined should be(true)
   }
   it should "find all records" in { implicit session =>
@@ -29,15 +29,15 @@ class RegistrationInvitationsSpec extends FixtureAnyFlatSpec with Matchers with 
     count should be >(0L)
   }
   it should "find all by where clauses" in { implicit session =>
-    val results = RegistrationInvitations.findAllBy(sqls.eq(ri.id, "MyString"))
+    val results = RegistrationInvitations.findAllBy(sqls.eq(ri.registrationInvitationId, "MyString"))
     results.size should be >(0)
   }
   it should "count by where clauses" in { implicit session =>
-    val count = RegistrationInvitations.countBy(sqls.eq(ri.id, "MyString"))
+    val count = RegistrationInvitations.countBy(sqls.eq(ri.registrationInvitationId, "MyString"))
     count should be >(0L)
   }
   it should "create new record" in { implicit session =>
-    val created = RegistrationInvitations.create(id = "MyString", description = "MyString", startingOn = null, tenantId = "MyString", concurrencyVersion = 123)
+    val created = RegistrationInvitations.create(registrationInvitationId = "MyString", description = "MyString", startingOn = null, tenantId = "MyString", concurrencyVersion = 123)
     created should not be(null)
   }
   it should "save a record" in { implicit session =>

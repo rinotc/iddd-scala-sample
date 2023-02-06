@@ -16,7 +16,7 @@ class GroupsSpec extends FixtureAnyFlatSpec with Matchers with AutoRollback {
     maybeFound.isDefined should be(true)
   }
   it should "find by where clauses" in { implicit session =>
-    val maybeFound = Groups.findBy(sqls.eq(g.id, "MyString"))
+    val maybeFound = Groups.findBy(sqls.eq(g.groupId, "MyString"))
     maybeFound.isDefined should be(true)
   }
   it should "find all records" in { implicit session =>
@@ -28,15 +28,15 @@ class GroupsSpec extends FixtureAnyFlatSpec with Matchers with AutoRollback {
     count should be >(0L)
   }
   it should "find all by where clauses" in { implicit session =>
-    val results = Groups.findAllBy(sqls.eq(g.id, "MyString"))
+    val results = Groups.findAllBy(sqls.eq(g.groupId, "MyString"))
     results.size should be >(0)
   }
   it should "count by where clauses" in { implicit session =>
-    val count = Groups.countBy(sqls.eq(g.id, "MyString"))
+    val count = Groups.countBy(sqls.eq(g.groupId, "MyString"))
     count should be >(0L)
   }
   it should "create new record" in { implicit session =>
-    val created = Groups.create(id = "MyString", description = "MyString", name = "MyString", tenantId = "MyString", concurrencyVersion = 123)
+    val created = Groups.create(groupId = "MyString", description = "MyString", name = "MyString", tenantId = "MyString", concurrencyVersion = 123)
     created should not be(null)
   }
   it should "save a record" in { implicit session =>

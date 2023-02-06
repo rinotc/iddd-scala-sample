@@ -3,7 +3,7 @@ package com.saasovation.infra.scalikejdbc
 import scalikejdbc._
 
 case class Roles(
-  id: String,
+  roleId: String,
   description: String,
   groupId: String,
   name: String,
@@ -24,11 +24,11 @@ object Roles extends SQLSyntaxSupport[Roles] {
 
   override val tableName = "roles"
 
-  override val columns = Seq("id", "description", "group_id", "name", "supports_nesting", "tenant_id", "concurrency_version")
+  override val columns = Seq("role_id", "description", "group_id", "name", "supports_nesting", "tenant_id", "concurrency_version")
 
   def apply(r: SyntaxProvider[Roles])(rs: WrappedResultSet): Roles = apply(r.resultName)(rs)
   def apply(r: ResultName[Roles])(rs: WrappedResultSet): Roles = new Roles(
-    id = rs.get(r.id),
+    roleId = rs.get(r.roleId),
     description = rs.get(r.description),
     groupId = rs.get(r.groupId),
     name = rs.get(r.name),
@@ -41,9 +41,9 @@ object Roles extends SQLSyntaxSupport[Roles] {
 
   override val autoSession = AutoSession
 
-  def find(id: String)(implicit session: DBSession = autoSession): Option[Roles] = {
+  def find(roleId: String)(implicit session: DBSession = autoSession): Option[Roles] = {
     withSQL {
-      select.from(Roles as r).where.eq(r.id, id)
+      select.from(Roles as r).where.eq(r.roleId, roleId)
     }.map(Roles(r.resultName)).single.apply()
   }
 
@@ -74,7 +74,7 @@ object Roles extends SQLSyntaxSupport[Roles] {
   }
 
   def create(
-    id: String,
+    roleId: String,
     description: String,
     groupId: String,
     name: String,
@@ -83,7 +83,7 @@ object Roles extends SQLSyntaxSupport[Roles] {
     concurrencyVersion: Int)(implicit session: DBSession = autoSession): Roles = {
     withSQL {
       insert.into(Roles).namedValues(
-        column.id -> id,
+        column.roleId -> roleId,
         column.description -> description,
         column.groupId -> groupId,
         column.name -> name,
@@ -94,7 +94,7 @@ object Roles extends SQLSyntaxSupport[Roles] {
     }.update.apply()
 
     Roles(
-      id = id,
+      roleId = roleId,
       description = description,
       groupId = groupId,
       name = name,
@@ -106,7 +106,7 @@ object Roles extends SQLSyntaxSupport[Roles] {
   def batchInsert(entities: collection.Seq[Roles])(implicit session: DBSession = autoSession): List[Int] = {
     val params: collection.Seq[Seq[(Symbol, Any)]] = entities.map(entity =>
       Seq(
-        Symbol("id") -> entity.id,
+        Symbol("roleId") -> entity.roleId,
         Symbol("description") -> entity.description,
         Symbol("groupId") -> entity.groupId,
         Symbol("name") -> entity.name,
@@ -114,7 +114,7 @@ object Roles extends SQLSyntaxSupport[Roles] {
         Symbol("tenantId") -> entity.tenantId,
         Symbol("concurrencyVersion") -> entity.concurrencyVersion))
     SQL("""insert into roles(
-      id,
+      role_id,
       description,
       group_id,
       name,
@@ -122,7 +122,7 @@ object Roles extends SQLSyntaxSupport[Roles] {
       tenant_id,
       concurrency_version
     ) values (
-      {id},
+      {roleId},
       {description},
       {groupId},
       {name},
@@ -135,20 +135,20 @@ object Roles extends SQLSyntaxSupport[Roles] {
   def save(entity: Roles)(implicit session: DBSession = autoSession): Roles = {
     withSQL {
       update(Roles).set(
-        column.id -> entity.id,
+        column.roleId -> entity.roleId,
         column.description -> entity.description,
         column.groupId -> entity.groupId,
         column.name -> entity.name,
         column.supportsNesting -> entity.supportsNesting,
         column.tenantId -> entity.tenantId,
         column.concurrencyVersion -> entity.concurrencyVersion
-      ).where.eq(column.id, entity.id)
+      ).where.eq(column.roleId, entity.roleId)
     }.update.apply()
     entity
   }
 
   def destroy(entity: Roles)(implicit session: DBSession = autoSession): Int = {
-    withSQL { delete.from(Roles).where.eq(column.id, entity.id) }.update.apply()
+    withSQL { delete.from(Roles).where.eq(column.roleId, entity.roleId) }.update.apply()
   }
 
 }

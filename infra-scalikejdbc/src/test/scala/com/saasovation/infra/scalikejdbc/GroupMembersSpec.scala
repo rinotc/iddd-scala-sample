@@ -16,7 +16,7 @@ class GroupMembersSpec extends FixtureAnyFlatSpec with Matchers with AutoRollbac
     maybeFound.isDefined should be(true)
   }
   it should "find by where clauses" in { implicit session =>
-    val maybeFound = GroupMembers.findBy(sqls.eq(gm.id, "MyString"))
+    val maybeFound = GroupMembers.findBy(sqls.eq(gm.groupMemberId, "MyString"))
     maybeFound.isDefined should be(true)
   }
   it should "find all records" in { implicit session =>
@@ -28,15 +28,15 @@ class GroupMembersSpec extends FixtureAnyFlatSpec with Matchers with AutoRollbac
     count should be >(0L)
   }
   it should "find all by where clauses" in { implicit session =>
-    val results = GroupMembers.findAllBy(sqls.eq(gm.id, "MyString"))
+    val results = GroupMembers.findAllBy(sqls.eq(gm.groupMemberId, "MyString"))
     results.size should be >(0)
   }
   it should "count by where clauses" in { implicit session =>
-    val count = GroupMembers.countBy(sqls.eq(gm.id, "MyString"))
+    val count = GroupMembers.countBy(sqls.eq(gm.groupMemberId, "MyString"))
     count should be >(0L)
   }
   it should "create new record" in { implicit session =>
-    val created = GroupMembers.create(id = "MyString", name = "MyString", tenantId = "MyString", `type` = "MyString", groupId = "MyString")
+    val created = GroupMembers.create(groupMemberId = "MyString", name = "MyString", tenantId = "MyString", `type` = "MyString", groupId = "MyString")
     created should not be(null)
   }
   it should "save a record" in { implicit session =>

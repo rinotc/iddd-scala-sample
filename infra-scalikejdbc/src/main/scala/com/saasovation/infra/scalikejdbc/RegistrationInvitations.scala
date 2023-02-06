@@ -4,7 +4,7 @@ import scalikejdbc._
 import java.time.{LocalDateTime}
 
 case class RegistrationInvitations(
-  id: String,
+  registrationInvitationId: String,
   description: String,
   startingOn: LocalDateTime,
   tenantId: String,
@@ -24,11 +24,11 @@ object RegistrationInvitations extends SQLSyntaxSupport[RegistrationInvitations]
 
   override val tableName = "registration_invitations"
 
-  override val columns = Seq("id", "description", "starting_on", "tenant_id", "until", "concurrency_version")
+  override val columns = Seq("registration_invitation_id", "description", "starting_on", "tenant_id", "until", "concurrency_version")
 
   def apply(ri: SyntaxProvider[RegistrationInvitations])(rs: WrappedResultSet): RegistrationInvitations = apply(ri.resultName)(rs)
   def apply(ri: ResultName[RegistrationInvitations])(rs: WrappedResultSet): RegistrationInvitations = new RegistrationInvitations(
-    id = rs.get(ri.id),
+    registrationInvitationId = rs.get(ri.registrationInvitationId),
     description = rs.get(ri.description),
     startingOn = rs.get(ri.startingOn),
     tenantId = rs.get(ri.tenantId),
@@ -40,9 +40,9 @@ object RegistrationInvitations extends SQLSyntaxSupport[RegistrationInvitations]
 
   override val autoSession = AutoSession
 
-  def find(id: String)(implicit session: DBSession = autoSession): Option[RegistrationInvitations] = {
+  def find(registrationInvitationId: String)(implicit session: DBSession = autoSession): Option[RegistrationInvitations] = {
     withSQL {
-      select.from(RegistrationInvitations as ri).where.eq(ri.id, id)
+      select.from(RegistrationInvitations as ri).where.eq(ri.registrationInvitationId, registrationInvitationId)
     }.map(RegistrationInvitations(ri.resultName)).single.apply()
   }
 
@@ -73,7 +73,7 @@ object RegistrationInvitations extends SQLSyntaxSupport[RegistrationInvitations]
   }
 
   def create(
-    id: String,
+    registrationInvitationId: String,
     description: String,
     startingOn: LocalDateTime,
     tenantId: String,
@@ -81,7 +81,7 @@ object RegistrationInvitations extends SQLSyntaxSupport[RegistrationInvitations]
     concurrencyVersion: Int)(implicit session: DBSession = autoSession): RegistrationInvitations = {
     withSQL {
       insert.into(RegistrationInvitations).namedValues(
-        column.id -> id,
+        column.registrationInvitationId -> registrationInvitationId,
         column.description -> description,
         column.startingOn -> startingOn,
         column.tenantId -> tenantId,
@@ -91,7 +91,7 @@ object RegistrationInvitations extends SQLSyntaxSupport[RegistrationInvitations]
     }.update.apply()
 
     RegistrationInvitations(
-      id = id,
+      registrationInvitationId = registrationInvitationId,
       description = description,
       startingOn = startingOn,
       tenantId = tenantId,
@@ -102,21 +102,21 @@ object RegistrationInvitations extends SQLSyntaxSupport[RegistrationInvitations]
   def batchInsert(entities: collection.Seq[RegistrationInvitations])(implicit session: DBSession = autoSession): List[Int] = {
     val params: collection.Seq[Seq[(Symbol, Any)]] = entities.map(entity =>
       Seq(
-        Symbol("id") -> entity.id,
+        Symbol("registrationInvitationId") -> entity.registrationInvitationId,
         Symbol("description") -> entity.description,
         Symbol("startingOn") -> entity.startingOn,
         Symbol("tenantId") -> entity.tenantId,
         Symbol("until") -> entity.until,
         Symbol("concurrencyVersion") -> entity.concurrencyVersion))
     SQL("""insert into registration_invitations(
-      id,
+      registration_invitation_id,
       description,
       starting_on,
       tenant_id,
       until,
       concurrency_version
     ) values (
-      {id},
+      {registrationInvitationId},
       {description},
       {startingOn},
       {tenantId},
@@ -128,19 +128,19 @@ object RegistrationInvitations extends SQLSyntaxSupport[RegistrationInvitations]
   def save(entity: RegistrationInvitations)(implicit session: DBSession = autoSession): RegistrationInvitations = {
     withSQL {
       update(RegistrationInvitations).set(
-        column.id -> entity.id,
+        column.registrationInvitationId -> entity.registrationInvitationId,
         column.description -> entity.description,
         column.startingOn -> entity.startingOn,
         column.tenantId -> entity.tenantId,
         column.until -> entity.until,
         column.concurrencyVersion -> entity.concurrencyVersion
-      ).where.eq(column.id, entity.id)
+      ).where.eq(column.registrationInvitationId, entity.registrationInvitationId)
     }.update.apply()
     entity
   }
 
   def destroy(entity: RegistrationInvitations)(implicit session: DBSession = autoSession): Int = {
-    withSQL { delete.from(RegistrationInvitations).where.eq(column.id, entity.id) }.update.apply()
+    withSQL { delete.from(RegistrationInvitations).where.eq(column.registrationInvitationId, entity.registrationInvitationId) }.update.apply()
   }
 
 }

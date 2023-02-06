@@ -16,7 +16,7 @@ class PersonsSpec extends FixtureAnyFlatSpec with Matchers with AutoRollback {
     maybeFound.isDefined should be(true)
   }
   it should "find by where clauses" in { implicit session =>
-    val maybeFound = Persons.findBy(sqls.eq(p.id, "MyString"))
+    val maybeFound = Persons.findBy(sqls.eq(p.personId, "MyString"))
     maybeFound.isDefined should be(true)
   }
   it should "find all records" in { implicit session =>
@@ -28,15 +28,15 @@ class PersonsSpec extends FixtureAnyFlatSpec with Matchers with AutoRollback {
     count should be >(0L)
   }
   it should "find all by where clauses" in { implicit session =>
-    val results = Persons.findAllBy(sqls.eq(p.id, "MyString"))
+    val results = Persons.findAllBy(sqls.eq(p.personId, "MyString"))
     results.size should be >(0)
   }
   it should "count by where clauses" in { implicit session =>
-    val count = Persons.countBy(sqls.eq(p.id, "MyString"))
+    val count = Persons.countBy(sqls.eq(p.personId, "MyString"))
     count should be >(0L)
   }
   it should "create new record" in { implicit session =>
-    val created = Persons.create(id = "MyString", email = "MyString", address = "MyString", postalCode = 123, telephoneNumber = "MyString", firstName = "MyString", lastName = "MyString", tenantId = "MyString", concurrencyVersion = 123)
+    val created = Persons.create(personId = "MyString", email = "MyString", address = "MyString", postalCode = 123, telephoneNumber = "MyString", firstName = "MyString", lastName = "MyString", tenantId = "MyString", concurrencyVersion = 123)
     created should not be(null)
   }
   it should "save a record" in { implicit session =>

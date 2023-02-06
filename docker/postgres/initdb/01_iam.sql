@@ -1,6 +1,6 @@
 create table tenants
 (
-    id                  char(36)
+    tenant_id           char(36)
         constraint tenants_pk
             primary key,
     active              boolean      not null,
@@ -12,7 +12,7 @@ create table tenants
 
 create table users
 (
-    id                  char(36)
+    user_id             char(36)
         constraint users_pk
             primary key,
     enablement_enabled  boolean      not null,
@@ -31,7 +31,7 @@ create index idx_users_tenant_id on users (tenant_id);
 
 create table groups
 (
-    id                  char(36)
+    group_id            char(36)
         constraint groups_pk
             primary key,
     description         varchar(250) not null,
@@ -49,15 +49,15 @@ create index groups_tenant_id_index
 
 create table group_members
 (
-    id        char(36)
+    group_member_id char(36)
         constraint group_member_pk
             primary key,
-    name      varchar(100) not null,
-    tenant_id char(36)     not null
+    name            varchar(100) not null,
+    tenant_id       char(36)     not null
         constraint fk_group_members_tenants_tenant_id_id
             references tenants,
-    type      varchar(5)   not null,
-    group_id  char(36)     not null
+    type            varchar(5)   not null,
+    group_id        char(36)     not null
         constraint fk_group_members_groups_group_id_id
             references groups
 );
@@ -70,7 +70,7 @@ create index group_member_tenant_id_index
 
 create table persons
 (
-    id                  char(36)
+    person_id           char(36)
         constraint person_pk
             primary key,
     email               varchar(100) not null,
@@ -105,7 +105,7 @@ create index idx_persons_tenant_id
 
 create table roles
 (
-    id                  char(36)
+    role_id             char(36)
         constraint roles_pk
             primary key,
     description         varchar(250) not null,
@@ -126,16 +126,16 @@ create index idx_roles_tenant_id on roles (tenant_id);
 
 create table registration_invitations
 (
-    id          char(36)
+    registration_invitation_id char(36)
         constraint registration_invitations_pk
             primary key,
-    description varchar(100) not null,
-    starting_on timestamp    not null,
-    tenant_id   char(36)     not null
+    description                varchar(100) not null,
+    starting_on                timestamp    not null,
+    tenant_id                  char(36)     not null
         constraint fk_registration_invitations_tenants_tenant_id_id
             references tenants,
-    until timestamp,
-    concurrency_version integer not null
+    until                      timestamp,
+    concurrency_version        integer      not null
 );
 
 create index idx_registration_invitations_tenant_id on registration_invitations (tenant_id);

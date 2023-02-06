@@ -3,7 +3,7 @@ package com.saasovation.infra.scalikejdbc
 import scalikejdbc._
 
 case class CalendarEntrySharers(
-  id: Int,
+  calendarEntrySharersId: Int,
   calendarId: String,
   participantEmailAddress: String,
   participantIdentity: String,
@@ -23,11 +23,11 @@ object CalendarEntrySharers extends SQLSyntaxSupport[CalendarEntrySharers] {
 
   override val tableName = "calendar_entry_sharers"
 
-  override val columns = Seq("id", "calendar_id", "participant_email_address", "participant_identity", "participant_name", "tenant_id")
+  override val columns = Seq("calendar_entry_sharers_id", "calendar_id", "participant_email_address", "participant_identity", "participant_name", "tenant_id")
 
   def apply(ces: SyntaxProvider[CalendarEntrySharers])(rs: WrappedResultSet): CalendarEntrySharers = apply(ces.resultName)(rs)
   def apply(ces: ResultName[CalendarEntrySharers])(rs: WrappedResultSet): CalendarEntrySharers = new CalendarEntrySharers(
-    id = rs.get(ces.id),
+    calendarEntrySharersId = rs.get(ces.calendarEntrySharersId),
     calendarId = rs.get(ces.calendarId),
     participantEmailAddress = rs.get(ces.participantEmailAddress),
     participantIdentity = rs.get(ces.participantIdentity),
@@ -39,9 +39,9 @@ object CalendarEntrySharers extends SQLSyntaxSupport[CalendarEntrySharers] {
 
   override val autoSession = AutoSession
 
-  def find(id: Int)(implicit session: DBSession = autoSession): Option[CalendarEntrySharers] = {
+  def find(calendarEntrySharersId: Int)(implicit session: DBSession = autoSession): Option[CalendarEntrySharers] = {
     withSQL {
-      select.from(CalendarEntrySharers as ces).where.eq(ces.id, id)
+      select.from(CalendarEntrySharers as ces).where.eq(ces.calendarEntrySharersId, calendarEntrySharersId)
     }.map(CalendarEntrySharers(ces.resultName)).single.apply()
   }
 
@@ -88,7 +88,7 @@ object CalendarEntrySharers extends SQLSyntaxSupport[CalendarEntrySharers] {
     }.updateAndReturnGeneratedKey.apply()
 
     CalendarEntrySharers(
-      id = generatedKey.toInt,
+      calendarEntrySharersId = generatedKey.toInt,
       calendarId = calendarId,
       participantEmailAddress = participantEmailAddress,
       participantIdentity = participantIdentity,
@@ -122,19 +122,19 @@ object CalendarEntrySharers extends SQLSyntaxSupport[CalendarEntrySharers] {
   def save(entity: CalendarEntrySharers)(implicit session: DBSession = autoSession): CalendarEntrySharers = {
     withSQL {
       update(CalendarEntrySharers).set(
-        column.id -> entity.id,
+        column.calendarEntrySharersId -> entity.calendarEntrySharersId,
         column.calendarId -> entity.calendarId,
         column.participantEmailAddress -> entity.participantEmailAddress,
         column.participantIdentity -> entity.participantIdentity,
         column.participantName -> entity.participantName,
         column.tenantId -> entity.tenantId
-      ).where.eq(column.id, entity.id)
+      ).where.eq(column.calendarEntrySharersId, entity.calendarEntrySharersId)
     }.update.apply()
     entity
   }
 
   def destroy(entity: CalendarEntrySharers)(implicit session: DBSession = autoSession): Int = {
-    withSQL { delete.from(CalendarEntrySharers).where.eq(column.id, entity.id) }.update.apply()
+    withSQL { delete.from(CalendarEntrySharers).where.eq(column.calendarEntrySharersId, entity.calendarEntrySharersId) }.update.apply()
   }
 
 }

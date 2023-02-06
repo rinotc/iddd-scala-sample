@@ -3,7 +3,7 @@ package com.saasovation.infra.scalikejdbc
 import scalikejdbc._
 
 case class Tenants(
-  id: String,
+  tenantId: String,
   active: Boolean,
   description: String,
   name: String,
@@ -22,11 +22,11 @@ object Tenants extends SQLSyntaxSupport[Tenants] {
 
   override val tableName = "tenants"
 
-  override val columns = Seq("id", "active", "description", "name", "concurrency_version")
+  override val columns = Seq("tenant_id", "active", "description", "name", "concurrency_version")
 
   def apply(t: SyntaxProvider[Tenants])(rs: WrappedResultSet): Tenants = apply(t.resultName)(rs)
   def apply(t: ResultName[Tenants])(rs: WrappedResultSet): Tenants = new Tenants(
-    id = rs.get(t.id),
+    tenantId = rs.get(t.tenantId),
     active = rs.get(t.active),
     description = rs.get(t.description),
     name = rs.get(t.name),
@@ -37,9 +37,9 @@ object Tenants extends SQLSyntaxSupport[Tenants] {
 
   override val autoSession = AutoSession
 
-  def find(id: String)(implicit session: DBSession = autoSession): Option[Tenants] = {
+  def find(tenantId: String)(implicit session: DBSession = autoSession): Option[Tenants] = {
     withSQL {
-      select.from(Tenants as t).where.eq(t.id, id)
+      select.from(Tenants as t).where.eq(t.tenantId, tenantId)
     }.map(Tenants(t.resultName)).single.apply()
   }
 
@@ -70,14 +70,14 @@ object Tenants extends SQLSyntaxSupport[Tenants] {
   }
 
   def create(
-    id: String,
+    tenantId: String,
     active: Boolean,
     description: String,
     name: String,
     concurrencyVersion: Int)(implicit session: DBSession = autoSession): Tenants = {
     withSQL {
       insert.into(Tenants).namedValues(
-        column.id -> id,
+        column.tenantId -> tenantId,
         column.active -> active,
         column.description -> description,
         column.name -> name,
@@ -86,7 +86,7 @@ object Tenants extends SQLSyntaxSupport[Tenants] {
     }.update.apply()
 
     Tenants(
-      id = id,
+      tenantId = tenantId,
       active = active,
       description = description,
       name = name,
@@ -96,19 +96,19 @@ object Tenants extends SQLSyntaxSupport[Tenants] {
   def batchInsert(entities: collection.Seq[Tenants])(implicit session: DBSession = autoSession): List[Int] = {
     val params: collection.Seq[Seq[(Symbol, Any)]] = entities.map(entity =>
       Seq(
-        Symbol("id") -> entity.id,
+        Symbol("tenantId") -> entity.tenantId,
         Symbol("active") -> entity.active,
         Symbol("description") -> entity.description,
         Symbol("name") -> entity.name,
         Symbol("concurrencyVersion") -> entity.concurrencyVersion))
     SQL("""insert into tenants(
-      id,
+      tenant_id,
       active,
       description,
       name,
       concurrency_version
     ) values (
-      {id},
+      {tenantId},
       {active},
       {description},
       {name},
@@ -119,18 +119,18 @@ object Tenants extends SQLSyntaxSupport[Tenants] {
   def save(entity: Tenants)(implicit session: DBSession = autoSession): Tenants = {
     withSQL {
       update(Tenants).set(
-        column.id -> entity.id,
+        column.tenantId -> entity.tenantId,
         column.active -> entity.active,
         column.description -> entity.description,
         column.name -> entity.name,
         column.concurrencyVersion -> entity.concurrencyVersion
-      ).where.eq(column.id, entity.id)
+      ).where.eq(column.tenantId, entity.tenantId)
     }.update.apply()
     entity
   }
 
   def destroy(entity: Tenants)(implicit session: DBSession = autoSession): Int = {
-    withSQL { delete.from(Tenants).where.eq(column.id, entity.id) }.update.apply()
+    withSQL { delete.from(Tenants).where.eq(column.tenantId, entity.tenantId) }.update.apply()
   }
 
 }
